@@ -3,14 +3,22 @@ const path = require('path');
 const app = express();
 const db = require('./db')
 
-// const http = require('http');
-// const server = http.createServer(() => {});
-//console.log(path.join(__dirname, 'index.html'));
+//middleware
+// app.use((req,res, next)
+// )
 app.get('/', (req, res, next) => {
-res.sendFile(path.join(__dirname, 'index.html'));
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
-app.get('/api/users', (req, res, next)=>{
 
-  res.send(db.getUsers());
+app.get('/api/users', async (req, res, next) => {
+  try {
+    res.send(await db.getUsers());
+  }
+  catch (ex) {
+    next(ex)
+  }
 });
+
+db.createUser({ name: "Shem" })
+  .then(user => console.log(user))
 app.listen(3000, () => console.log('listening on port 3000'));
